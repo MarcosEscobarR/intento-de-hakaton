@@ -6,6 +6,32 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+
+model Users {
+  id Int @id @default(autoincrement())
+  fullName  String 
+  password String
+  phone String
+  storeId Stores?
+}
+
+model Stores {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  user Users @relation(fields: [userId], references: [id])
+  debstors Debstors[]
+}
+
+model Debstors {
+  id Int @id @default(autoincrement())
+  storeId Int
+  store Stores @relation(fields: [storeId], references: [id])
+  name String
+  phone String
+  amount Float
+  paid_out Boolean @default(false)
 }
