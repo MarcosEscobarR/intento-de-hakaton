@@ -21,18 +21,18 @@ export class DebtorsService {
     });
   }
 
-  update(id: string, dto: UpdateDebtorDto) {
+  update(id: number, dto: UpdateDebtorDto) {
     return prisma.debstors.update({
-      where: {id: parseInt(id)},
-      data: {...dto}
+      where: { id },
+      data: { ...dto }
     })
   }
 
-  updateStatus(id: string) {
+  updateStatus(id: number) {
     return prisma.debstors.update({
-      where: {id: parseInt(id)},
-      data: {paid_out: true},
-      select: {id: true, paid_out: true}
+      where: { id },
+      data: { paid_out: true },
+      select: { id: true, paid_out: true }
     })
   }
 

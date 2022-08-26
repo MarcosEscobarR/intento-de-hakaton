@@ -2,28 +2,44 @@ import { Injectable } from '@nestjs/common';
 import {prisma} from "../prisma"
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
+import { FindStoresDto } from './dto/find-stores-dto';
 
 @Injectable()
 export class StoresService {
-  async create(dto: CreateStoreDto ) {
+  async find(dto: FindStoresDto) {
+    return await prisma.stores.findMany({
+      where: {
+        name: { contains: dto.name}
+      }
+    });
+  }
+  
+  async create(dto: CreateStoreDto) {
     return await prisma.stores.create({
-      data: {...dto}
+      data: { ...dto },
+      select: {id: true}
     })
   }
 
-  findAll() {
-    return `This action returns all stores`;
+  update(id: number, dto: UpdateStoreDto) {
+    return prisma.stores.update({
+      where: { id },
+      data: { ...dto }
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} store`;
+  updateStatus(id: number) {
+    return prisma.stores.update({
+      where: { id },
+      data: { enabled: false },
+      select: { id: true, enabled: true }
+    })
   }
 
-  update(id: number, updateStoreDto: UpdateStoreDto) {
-    return `This action updates a #${id} store`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} store`;
+  delete(id: number) {
+    return prisma.stores.delete({
+      where: { id },
+      select: { id: true }
+    })
   }
 }
